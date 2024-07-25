@@ -1,0 +1,42 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  access_token: String!
+  refresh_token: String!
+  user: User
+}
+
+input AuthDto {
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  register(authDto: AuthDto!): Auth!
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type User {
+  created_at: DateTime!
+  email: String!
+  email_confirmation_token: String
+  id: ID!
+  is_email_confirmed: Boolean!
+  password: String!
+  refresh_token: String
+  role: Role!
+  updated_at: DateTime!
+  username: String!
+}
