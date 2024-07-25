@@ -9,6 +9,15 @@ export class Auth {
   @Field()
   refresh_token: string;
 
+  @Field()
+  message: string;
+
   @Field(() => User, { nullable: true })
   user: User | null;
+}
+
+@ObjectType()
+export class ConfirmEmail {
+  @Field()
+  message: string;
 }

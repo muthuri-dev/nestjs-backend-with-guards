@@ -4,6 +4,7 @@
 
 type Auth {
   access_token: String!
+  message: String!
   refresh_token: String!
   user: User
 }
@@ -14,12 +15,17 @@ input AuthDto {
   username: String!
 }
 
+type ConfirmEmail {
+  message: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
 type Mutation {
+  confirmEmail(token: String!): ConfirmEmail!
   register(authDto: AuthDto!): Auth!
 }
 
