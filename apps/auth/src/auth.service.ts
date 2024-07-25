@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'apps/users/src/entities/user.entity';
@@ -63,7 +64,7 @@ export class AuthService {
   }
 
   //  register user
-  async register(authDto: AuthDto): Promise<Auth> {
+  async register(authDto: AuthDto): Promise<Partial<Auth>> {
     //check if user already exists
     const isEmail = await this.usersRepository.findUnique({
       email: authDto.email,
@@ -81,8 +82,7 @@ export class AuthService {
     const user = await this.usersRepository.create(createUserDto);
 
     //getting tokens
-    const access_token = await this.generateAccessToken(user);
-    const refresh_token = await this.generateRefreshToken(access_token, user);
+
     const confirmationToken = await this.jwtService.sign(user.email, {
       secret: this.configService.get<string>('SECRET_EMAIL_TOKEN'),
     });
@@ -90,7 +90,6 @@ export class AuthService {
     //updating user
     const updateUser = {
       ...user,
-      refresh_token,
       email_confirmation_token: confirmationToken,
     };
     await this.usersRepository.update(user.id, updateUser);
@@ -103,8 +102,6 @@ export class AuthService {
     );
 
     return {
-      access_token,
-      refresh_token,
       message:
         'Registration successful. Please check your email to confirm your account',
       user,
@@ -127,5 +124,24 @@ export class AuthService {
     await this.usersRepository.update(user.id, updateUser);
 
     return { message: 'Email confirmed successfully. You can now log in' };
+  }
+
+  //login in user to the system
+  async login(authDto: Partial<AuthDto>): Promise<Auth> {
+    //check if user is registered if email is confirmed
+    const user = await this.usersRepository.findUnique({
+      email: authDto.email,
+    });
+
+    if (!user) throw new NotAcceptableException('Register first to login');
+
+    if (!user.is_email_confirmed)
+      throw new NotAcceptableException('Confirm email to login');
+
+    //getting tokens
+    const access_token = await this.generateAccessToken(user);
+    const refresh_token = await this.generateRefreshToken(access_token, user);
+
+    return;
   }
 }
