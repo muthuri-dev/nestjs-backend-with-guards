@@ -21,3 +21,9 @@ export class ConfirmEmail {
   @Field()
   message: string;
 }
+
+@ObjectType()
+export class LogOut {
+  @Field()
+  message: string;
+}

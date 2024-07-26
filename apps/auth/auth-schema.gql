@@ -24,9 +24,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type LogOut {
+  message: String!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   confirmEmail(token: String!): ConfirmEmail!
-  register(authDto: AuthDto!): Auth!
+  login(authInput: LoginDto!): Auth!
+  logout(user_id: String!): LogOut!
+  register(authInput: AuthDto!): Auth!
 }
 
 enum Role {
