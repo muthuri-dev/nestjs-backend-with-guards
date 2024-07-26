@@ -23,8 +23,6 @@ export class AuthService {
     private emailService: EmailsService,
   ) {}
 
-  //register, login, confirmEmail, logout -> verifyUser, generateTokens, updateToken,
-
   //validate user
   async verifyUser(id: string): Promise<User> {
     return await this.usersRepository.findUnique({ id });

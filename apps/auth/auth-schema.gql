@@ -40,6 +40,10 @@ type Mutation {
   register(authInput: AuthDto!): Auth!
 }
 
+type Query {
+  hello: String!
+}
+
 enum Role {
   ADMIN
   USER
